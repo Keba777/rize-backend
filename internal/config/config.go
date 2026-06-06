@@ -6,25 +6,28 @@ import (
 )
 
 type Config struct {
-	Port             string
-	AllowedOrigins   string
-	JWTSecret        string
-	JWTTTLHours      int
-	MagicLinkTTLMin  int
-	SMTPHost         string
-	SMTPPort         string
-	SMTPUser         string
-	SMTPPass         string
-	FromEmail        string
-	DatabaseURL      string
-	VAPIDPublicKey   string
-	VAPIDPrivateKey  string
-	VAPIDEmail       string
+	Port               string
+	AllowedOrigins     string
+	JWTSecret          string
+	JWTTTLHours        int
+	MagicLinkTTLMin    int
+	SMTPHost           string
+	SMTPPort           string
+	SMTPUser           string
+	SMTPPass           string
+	FromEmail          string
+	DatabaseURL        string
+	VAPIDPublicKey     string
+	VAPIDPrivateKey    string
+	VAPIDEmail         string
+	GoogleClientID     string
+	GoogleClientSecret string
+	GoogleRedirectURL  string
 }
 
 func Load() *Config {
 	return &Config{
-		Port:            getEnv("PORT", "8080"),
+		Port:            getEnv("PORT", "7070"),
 		AllowedOrigins:  getEnv("ALLOWED_ORIGINS", "http://localhost:3000"),
 		JWTSecret:       mustEnv("JWT_SECRET"),
 		JWTTTLHours:     getEnvInt("JWT_TTL_HOURS", 24),
@@ -35,9 +38,12 @@ func Load() *Config {
 		SMTPPass:        getEnv("SMTP_PASS", ""),
 		FromEmail:       getEnv("FROM_EMAIL", "noreply@rize.app"),
 		DatabaseURL:     mustEnv("DATABASE_URL"),
-		VAPIDPublicKey:  getEnv("VAPID_PUBLIC_KEY", ""),
-		VAPIDPrivateKey: getEnv("VAPID_PRIVATE_KEY", ""),
-		VAPIDEmail:      getEnv("VAPID_EMAIL", ""),
+		VAPIDPublicKey:     getEnv("VAPID_PUBLIC_KEY", ""),
+		VAPIDPrivateKey:    getEnv("VAPID_PRIVATE_KEY", ""),
+		VAPIDEmail:         getEnv("VAPID_EMAIL", ""),
+		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
+		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
+		GoogleRedirectURL:  getEnv("GOOGLE_REDIRECT_URL", "http://localhost:3000/auth/google/callback"),
 	}
 }
 

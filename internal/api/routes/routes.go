@@ -20,6 +20,13 @@ func Register(app *fiber.App, h Handlers, jwtSecret string) {
 	auth := app.Group("/auth")
 	auth.Post("/magic", h.Auth.SendMagicLink)
 	auth.Get("/verify", h.Auth.VerifyMagicLink)
+	auth.Post("/register", h.Auth.Register)
+	auth.Post("/resend-verification", h.Auth.ResendVerification)
+	auth.Post("/login", h.Auth.Login)
+	auth.Get("/verify-email", h.Auth.VerifyEmail)
+	auth.Get("/google", h.Auth.GoogleRedirect)
+	auth.Get("/google/callback", h.Auth.GoogleCallback)
+	auth.Post("/google/exchange", h.Auth.GoogleExchange)
 	auth.Post("/logout", h.Auth.Logout)
 	auth.Get("/me", middleware.Auth(jwtSecret), h.Auth.Me)
 

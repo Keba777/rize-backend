@@ -8,11 +8,11 @@ import (
 )
 
 type Mailer struct {
-	host     string
-	port     string
-	user     string
-	pass     string
-	from     string
+	host string
+	port string
+	user string
+	pass string
+	from string
 }
 
 func New(host, port, user, pass, from string) *Mailer {
@@ -23,6 +23,15 @@ func (m *Mailer) SendMagicLink(to, link string) error {
 	subject := "Your Rize sign-in link"
 	body := fmt.Sprintf(
 		"Click the link below to sign in to Rize. It expires in 15 minutes.\n\n%s\n\nIf you didn't request this, ignore this email.",
+		link,
+	)
+	return m.send(to, subject, body)
+}
+
+func (m *Mailer) SendVerificationEmail(to, link string) error {
+	subject := "Verify your Rize email"
+	body := fmt.Sprintf(
+		"Click the link below to verify your email address. It expires in 24 hours.\n\n%s\n\nIf you didn't create a Rize account, ignore this email.",
 		link,
 	)
 	return m.send(to, subject, body)
@@ -45,7 +54,6 @@ func (m *Mailer) send(to, subject, body string) error {
 	tlsConfig := &tls.Config{ServerName: m.host, InsecureSkipVerify: false}
 	conn, err := tls.Dial("tcp", addr, tlsConfig)
 	if err != nil {
-		// fallback to STARTTLS
 		return smtp.SendMail(addr, auth, m.from, []string{to}, []byte(msg))
 	}
 	defer conn.Close()
@@ -69,8 +77,7 @@ func (m *Mailer) send(to, subject, body string) error {
 	if err != nil {
 		return err
 	}
-	_, err = w.Write([]byte(msg))
-	if err != nil {
+	if _, err = w.Write([]byte(msg)); err != nil {
 		return err
 	}
 	return w.Close()
