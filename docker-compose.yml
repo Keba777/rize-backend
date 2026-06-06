@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rize
+      POSTGRES_PASSWORD: rize
+      POSTGRES_DB: rize
+    ports:
+      - "5440:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rize"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rize-net
+
+  backend:
+    build: .
+    network_mode: host
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://rize:rize@localhost:5440/rize?sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+networks:
+  rize-net:
+    driver: bridge
+
+volumes:
+  pgdata:
