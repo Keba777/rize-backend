@@ -75,10 +75,11 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOriginsFunc: func(origin string) bool { return true },
+		AllowOrigins:     cfg.AllowedOrigins,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowMethods:     "GET, POST, PATCH, DELETE, OPTIONS",
 		AllowCredentials: true,
+		MaxAge:           86400,
 	}))
 
 	// Health
