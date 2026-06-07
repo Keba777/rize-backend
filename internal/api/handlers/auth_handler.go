@@ -159,8 +159,8 @@ func (h *AuthHandler) GoogleRedirect(c *fiber.Ctx) error {
 		Name:     "oauth_state",
 		Value:    state,
 		HTTPOnly: true,
-		Secure:   false, // set true in production
-		SameSite: "Lax",
+		Secure:   true,
+		SameSite: "None",
 		MaxAge:   300,
 		Path:     "/",
 	})
@@ -195,7 +195,7 @@ func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 		Value:    "",
 		HTTPOnly: true,
 		Secure:   true,
-		SameSite: "Lax",
+		SameSite: "None",
 		Expires:  time.Unix(0, 0),
 		Path:     "/",
 	})
@@ -217,7 +217,7 @@ func (h *AuthHandler) setAuthCookie(c *fiber.Ctx, token string) {
 		Value:    token,
 		HTTPOnly: true,
 		Secure:   true,
-		SameSite: "Lax",
+		SameSite: "None", // cross-domain: frontend (vercel) → backend (railway)
 		Expires:  time.Now().Add(time.Duration(h.jwtTTLHours) * time.Hour),
 		Path:     "/",
 	})
